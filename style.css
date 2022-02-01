@@ -1,0 +1,46 @@
+body {
+  margin: 40px auto;
+  max-width: 650px;
+  padding: 0;
+
+  color: #343B58;
+  background-color: #D5D6DB;
+
+  line-height: 1.6;
+  font-size: 18px;
+  font-family: monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    color: #A9B1D6;
+    background-color: #1A1B26;
+  }
+}
+
+.sourceCode {
+  padding: 4px;
+  margin: 0;
+
+  background-color: #24283B;
+  color: unset;
+}
+
+h1 {
+  line-height: 1.2;
+}
+
+a {
+  color: inherit;
+  text-decoration: underline 2px double #7AA2F7;
+  font-weight: bold;
+}
+
+time {
+  font-style: italic;
+}
+
+hr {
+  color: #444B6A;
+}
+
