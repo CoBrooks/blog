@@ -11,6 +11,7 @@ jobs:
       - name: create files list
         id: files_list
         run: |
+          mkdir output
           echo "::set-output name=files::$(printf '"%s" ' ./pages/*.md)"
       - uses: docker://pandoc/core:2.14
         with:
