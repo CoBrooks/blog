@@ -21,13 +21,13 @@ jobs:
             echo "$TITLE -> $PATH"
             echo "[$TITLE]($PATH)\n" >> toc.md
           done
-          $(which pandoc) -s --output="output/index.html" toc.md
+          /usr/bin/pandoc -s --output="output/index.html" toc.md
       - name: generate html files
         run: |
           for f in ./pages/*.md; do 
             OUTPUT=output/$(basename "$f" .md).html
             echo "$f > $OUTPUT"
-            pandoc -s --template=./template.html --output="$OUTPUT" "$f"
+            /usr/bin/pandoc -s --template=./template.html --output="$OUTPUT" "$f"
           done
       - uses: JamesIves/github-pages-deploy-action@v4.2.3 
         with: 
