@@ -21,7 +21,7 @@ jobs:
             echo "$TITLE -> $PATH"
             echo "[$TITLE]($PATH)\n" >> toc.md
           done
-          pandoc -s --output="output/index.html" toc.md
+          $(which pandoc) -s --output="output/index.html" toc.md
       - name: generate html files
         run: |
           for f in ./pages/*.md; do 
