@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps: 
       - uses: actions/checkout@master
-      - run: mkdir output
+      - run: mkdir -p output/css
       - uses: r-lib/actions/setup-pandoc@master
         with:
           pandoc-version: '2.14.2'
