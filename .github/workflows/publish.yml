@@ -14,13 +14,17 @@ jobs:
           pandoc-version: '2.14.2'
       - name: generate index.html 
         run: |
-          echo "---\ntitle: Table of Contents\n---\n\n" > toc.md
+          echo "---
+            title: Table of Contents
+            ---
+            " > toc.md
           for f in ./pages/*.md; do
             TITLE=$(basename "$f" .md | awk '{$1=$2=""; print $0}' | xargs)
             PATH=$(basename "$f" .md).html
             echo "$TITLE -> $PATH"
             echo "[$TITLE]($PATH)\n" >> toc.md
           done
+          cat toc.md
           /usr/bin/pandoc -s --output="output/index.html" toc.md
       - name: generate html files
         run: |
