@@ -15,7 +15,10 @@ jobs:
           echo "::set-output name=files::$(printf '"%s" ' ./pages/*.md)"
       - uses: docker://pandoc/core:2.14
         with:
-          args: --output=output/result.html ${{ steps.files_list.outputs.files }}
+          args: >-
+            --standalone
+            --output=output/result.html ${{ steps.files_list.outputs.files }}
+            --template=template.html
       - uses: actions/upload-artifact@master
         with: 
           name: output
