@@ -8,11 +8,22 @@ jobs:
     runs-on: ubuntu-latest
     steps: 
       - uses: actions/checkout@master
+      - run: mkdir output
       - uses: r-lib/actions/setup-pandoc@master
         with:
           pandoc-version: '2.14.2'
-      - run: >-
-          mkdir output &&
+      - name: generate index.html 
+        run: |
+          echo "---\ntitle: Table of Contents\n---\n\n" > toc.md
+          for f in ./pages/*.md; do
+            TITLE=$(basename "$f" .md | awk '{$1=$2=""; print $0}' | xargs)
+            PATH=$(basename "$f" .md).html
+            echo "$TITLE -> $PATH"
+            echo "[$TITLE]($PATH)\n" >> toc.md
+          done
+          pandoc -s --output="output/index.html" toc.md
+      - name: generate html files
+        run: |
           for f in ./pages/*.md; do 
             OUTPUT=output/$(basename "$f" .md).html
             echo "$f > $OUTPUT"
