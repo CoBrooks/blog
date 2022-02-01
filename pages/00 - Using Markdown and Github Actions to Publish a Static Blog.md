@@ -1,7 +1,7 @@
-----------
+---
 title: Using Markdown and Github Actions to Publish a Static Blog
 date: February 01, 2022
-----------
+---
 
 ## Motivation
 
