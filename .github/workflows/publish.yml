@@ -13,7 +13,7 @@ jobs:
           pandoc-version: '2.14.2'
       - run: >-
           for f in ./pages/*.md; do 
-            OUTPUT=output/$(basename $f .md).html
+            OUTPUT=output/$(basename "$f" .md).html
             pandoc -s --template=./template.html --output=$OUTPUT $f
           done
       - uses: JamesIves/github-pages-deploy-action@v4.2.3 
