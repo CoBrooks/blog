@@ -14,7 +14,8 @@ jobs:
       - run: >-
           for f in ./pages/*.md; do 
             OUTPUT=output/$(basename "$f" .md).html
-            pandoc -s --template=./template.html --output=$OUTPUT "$f"
+            echo "$f > $OUTPUT"
+            pandoc -s --template=./template.html --output="$OUTPUT" "$f"
           done
       - uses: JamesIves/github-pages-deploy-action@v4.2.3 
         with: 
