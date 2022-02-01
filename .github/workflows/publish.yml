@@ -24,7 +24,6 @@ jobs:
             echo "$TITLE -> $PATH"
             echo "[$TITLE]($PATH)\n" >> toc.md
           done
-          cat toc.md
           /usr/bin/pandoc -s --output="output/index.html" toc.md
       - name: generate html files
         run: |
