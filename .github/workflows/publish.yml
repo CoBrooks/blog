@@ -20,7 +20,7 @@ jobs:
 
           " > toc.md
           for f in ./pages/*.md; do
-            TITLE=$(basename "$f" .md | awk '{$1=$2=""; print $0}' | xargs)
+            TITLE=$(basename "$f" .md)
             PATH=$(basename "$f" .md | awk '{print $1}').html
             echo "$TITLE -> $PATH"
             echo "[$TITLE]($PATH)\n" >> toc.md
