@@ -3,23 +3,44 @@
   <head>
     <meta charset="UTF-8">
     <meta name="author" content="Cole Brooks">
-    <meta name="date" content='2022-02-01'>
+    <meta name="date" content='2022-02-02'>
 
     <link href="css/style.css" rel="stylesheet">
     <title>Using Markdown and Github Actions to Publish a Static Blog</title>
   </head>
   <body>
     <h1>Using Markdown and Github Actions to Publish a Static Blog</h1>
-    <time>February 01, 2022</time>
-    <h2 id="motivation">Motivation</h2>
-    <p>Lorem ipsum dolor sit amet…</p>
-    <h2 id="benefits">Benefits</h2>
-    <p>Lorem ipsum dolor sit amet…</p>
-    <h3 id="markdown">Markdown</h3>
-    <p>Lorem ipsum dolor sit amet…</p>
-    <h3 id="open-source-blog">Open-Source Blog</h3>
-    <p>Lorem ipsum dolor sit amet…</p>
-    <h2 id="how-to">How-to</h2>
-    <p>Lorem ipsum dolor sit amet…</p>
+    <time>February 02, 2022</time>
+    <hr/>
+    <blockquote>
+    <p>First, I do not sit down at my desk to put into verse something that is already clear in my mind. If it were clear in my mind, I should have no incentive or need to write about it. We do not write in order to be understood; we write in order to understand.</p>
+    <p>- C.S. Lewis</p>
+    </blockquote>
+    <h2 id="what-is-this">What is this?</h2>
+    <p>This is a static, Github-hosted, markdown-based, open-source blog, enabling a simple and content-focused writing process. My goal for this specific blog is, as the eloquent C.S. Lewis explained, to provide myself with a personal outlet to write of my various programming projects or merely anything I think is worth writing about in an effort to further my understanding of the topic, document the progress of these projects, and generally hone my skills as a writer.</p>
+    <h3 id="why-not-use-an-existing-blogging-platform">Why not use an existing blogging platform?</h3>
+    <p>To achieve this goal, I did not need (or want) any of the fancy features provided by a blogging platform such as Medium or Wordpress. Furthermore, markdown offers an extremely simple way to express every construct I would need for a blog such as this. As a strong believer in the open-source process and community, I also wanted to provide a minimal and easy way for others to create similar blogs.</p>
+    <h2 id="why-should-you-consider-using-this">Why should you consider using this?</h2>
+    <h3 id="static">Static</h3>
+    <p>This blog has no moving parts, no forms, no searchbar, not even any JavaScript; what you see is what you get. This allows both the writer and the reader, to focus solely on the content of the blog.</p>
+    <h3 id="github-hosted">Github-hosted</h3>
+    <p>I am using Github Pages to serve the pages generated from the raw markdown (more on that later). This means that using this pipeline is 100% free. Furthermore, you need not worry about self-hosting.</p>
+    <h3 id="markdown-based">Markdown-based</h3>
+    <p><a href="https://github.com/CoBrooks/blog/blob/main/pages/00%20-%20Using%20Markdown%20and%20Github%20Actions%20to%20Publish%20a%20Static%20Blog.md">This blogpost</a> and the ones that will follow are written entirely in markdown. By using a tool called <a href="https://pandoc.org/">pandoc</a>, this markdown is converted to html, allowing me to quickly and easily create and generate tables, syntax-highlighted codeblocks, even diagrams and visualizations with <a href="https://mermaid-js.github.io/mermaid/">Mermaid</a>.</p>
+    <h3 id="open-source">Open-source</h3>
+    <p>The <a href="https://github.com/CoBrooks/blog">repo</a> hosting this blog is public, allowing anyone and everyone to fork or clone it to set up their own blog. I have set up a Github Action that automatically generates a table of contents and individual blogposts from the markdown files within the <code>pages/</code> directory upon each push to the main branch. This also opens up a plethora of Github (and git) features to the writing and revision process. For example, if someone notices a typo or if something becomes outdated, one can submit a pull request to suggest a fix. Additionally, Github projects allows one to see planned blogposts and what writing phase said post is currently in.</p>
+    <h2 id="the-meat-and-potatoes">The meat and potatoes</h2>
+    <h3 id="project-structure">Project structure</h3>
+    <p>If you take a look at the <a href="https://github.com/CoBrooks/blog">repo</a>, you should see four folders. Starting from the top, we have the <code>.github/workflows/</code> directory, containing the YAML file that describes the pipeline for generating the blog upon a <code>git push</code>. Next is the <code>pages/</code> directory, which contains all of the blogposts in their markdown format. Following this is the <code>styling/</code> directory with houses the sole stylesheet for the blog. Lastly we have the <code>templates/</code> directory which contains two html files: one for generating the table of contents and the other for the individual blogposts. Both of these templates are used by pandoc during the publish job.</p>
+    <h3 id="the-publish-job">The publish job</h3>
+    <p>There are four main steps contained in <a href="https://github.com/CoBrooks/blog/blob/main/.github/workflows/publish.yml">publish.yml</a>:</p>
+    <ul>
+    <li><code>run: mkdir -p output/css</code> and <code>uses: r-lib/actions/setup-pandoc@master</code> create the output folder and download pandoc respectively.</li>
+    <li><code>generate index.html</code> runs through all of the .md files in <code>pages/</code> and generates the table of contents.</li>
+    <li><code>generate html files</code> again iterates through each .md file in <code>pages/</code> and generates the final blogposts.</li>
+    <li><code>run: cp ./styling/style.css...</code> and <code>uses: JamesIves/github-pages-deploy-action@v4.2.3</code> finish off the process by copying the stylesheet to the output directory and push said output directory to the <code>gh-pages</code> branch respectively.</li>
+    </ul>
+    <h2 id="conclusion">Conclusion</h2>
+    <p>I hope that this blogpost was informative and/or interesting. My goal going forward is to write blogposts on a variety of subjects ranging from, as I mentioned previously, programming projects to literature or theology; anything I find interesting, really. The next one I have planned is one concerning the intriguing nature of the RDF data model.</p>
   </body>
 </html>

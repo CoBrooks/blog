@@ -1,46 +1,50 @@
-body {
-  margin: 40px auto;
-  max-width: 650px;
-  padding: 0;
-
-  color: #343B58;
-  background-color: #D5D6DB;
-
+:root {
+  --bg:      #1a1b26;
+  --fg:      #a9b1d6;
+  --black:   #32344a;
+  --red:     #f7768e;
+  --green:   #9ece6a;
+  --yellow:  #e0af68;
+  --blue:    #7aa2f7;
+  --magenta: #ad8ee6;
+  --cyan:    #449dab;
+  --white:   #787c99;
+  
   line-height: 1.6;
-  font-size: 18px;
+  font-size: 1.15rem;
   font-family: monospace;
-}
 
-@media (prefers-color-scheme: dark) {
-  body {
-    color: #A9B1D6;
-    background-color: #1A1B26;
-  }
-}
-
-.sourceCode {
-  padding: 4px;
-  margin: 0;
-
-  background-color: #24283B;
-  color: unset;
-}
-
-h1 {
-  line-height: 1.2;
+  color: var(--fg);
+  background-color: var(--bg);
 }
 
 a {
-  color: inherit;
-  text-decoration: underline 2px double #7AA2F7;
+  color: var(--blue);
+  text-decoration: 2px solid underline var(--blue);
   font-weight: bold;
+}
+
+hr {
+  color: var(--black);
+}
+
+body {
+  margin: 40px auto;
+  max-width: 70ch;
+  padding: 0;
+}
+
+code {
+  background-color: var(--black);
+  color: var(--yellow);
+  padding: 2px;
+}
+
+h1, h2, h3 {
+  line-height: 1.2;
 }
 
 time {
   font-style: italic;
-}
-
-hr {
-  color: #444B6A;
 }
 
