@@ -15,10 +15,10 @@ jobs:
       - name: generate index.html 
         run: |
           echo "---
-title: Table of Contents
----
+          title: Table of Contents
+          ---
 
-" > toc.md
+          " > toc.md
           for f in ./pages/*.md; do
             TITLE=$(basename "$f" .md | awk '{$1=$2=""; print $0}' | xargs)
             PATH=$(basename "$f" .md | awk '{print $1}').html
