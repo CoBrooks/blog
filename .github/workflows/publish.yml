@@ -17,10 +17,11 @@ jobs:
           echo "---
             title: Table of Contents
             ---
+
             " > toc.md
           for f in ./pages/*.md; do
             TITLE=$(basename "$f" .md | awk '{$1=$2=""; print $0}' | xargs)
-            PATH=$(basename "$f" .md).html
+            PATH=$(basename "$f" .md | awk '{print $1}').html
             echo "$TITLE -> $PATH"
             echo "[$TITLE]($PATH)\n" >> toc.md
           done
@@ -28,7 +29,7 @@ jobs:
       - name: generate html files
         run: |
           for f in ./pages/*.md; do 
-            OUTPUT=output/$(basename "$f" .md).html
+            OUTPUT=output/$(basename "$f" .md | awk '{print $1}').html
             echo "$f > $OUTPUT"
             /usr/bin/pandoc -s --template=./templates/blogpost.html --output="$OUTPUT" "$f"
           done
