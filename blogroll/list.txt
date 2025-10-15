@@ -4,3 +4,4 @@ https://bernsteinbear.com/feed.xml
 https://glfmn.io/atom.xml
 https://ratfactor.com/atom.xml
 https://mmapped.blog/feed.xml
+https://notes.eatonphil.com/rss.xml

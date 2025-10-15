@@ -15,7 +15,6 @@
       nativeBuildInputs = [
         pkgs.tinycc
         pkgs.gdb
-        pkgs.lua
       ];
 
       buildInputs = [ ];

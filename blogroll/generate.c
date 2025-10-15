@@ -1,5 +1,3 @@
-//usr/bin/env tcc -run "$0" "$@" ; exit $?
-
 #define _XOPEN_SOURCE
 
 #include <assert.h>
@@ -222,6 +220,44 @@ xml_slice rss_source(xml_state *state, const char *contents)
     };
 }
 
+void print_sanitized(xml_slice slice)
+{
+    const char *html_lt[127] = {
+        ['\''] = "&apos;",
+        ['\"'] = "&quot;",
+        [';'] = "&semi;",
+        ['<'] = "&lt;",
+        ['>'] = "&gt;",
+    };
+
+    const char *start = slice.ptr;
+
+    for (size_t i = 0; i < slice.len; ++i) {
+        unsigned char c = slice.ptr[i];
+
+        if (c > 0x7F) {
+            i++;
+            continue;
+        }
+
+        if (html_lt[c] != NULL) {
+            size_t len = &slice.ptr[i] - start;
+
+            printf("%.*s", (int)len, start);
+            printf("%s", html_lt[c]);
+
+            start = &slice.ptr[i + 1];
+        }
+    }
+
+    xml_slice last = {
+        .ptr = start,
+        .len = slice.len - (start - slice.ptr),
+    };
+
+    printf("%.*s", (int)last.len, last.ptr);
+}
+
 void print_entry(entry e)
 {
     struct tm date = {0};
@@ -234,17 +270,19 @@ void print_entry(entry e)
     size_t date_len;
 
     date_len = strftime((char*)date_buffer, sizeof(date_buffer), "%F", &date);
-    printf("--[[%.*s]] ", (int)date_len, date_buffer);
+    printf("/* %.*s */ ", (int)date_len, date_buffer);
 
-    printf("entry {");
-    printf(" title = [[%.*s]],", (int)e.title.len, e.title.ptr);
+    printf("ENTRY(");
+    printf("TEXT(");
+    print_sanitized(e.title);
+    printf("), ");
 
     date_len = strftime((char*)date_buffer, sizeof(date_buffer), "%h %d, %Y", &date);
-    printf(" date = [[%.*s]],", (int)date_len, date_buffer);
+    printf("TEXT(%.*s), ", (int)date_len, date_buffer);
 
-    printf(" link = [[%.*s]], ", (int)e.link.len, e.link.ptr);
-    printf(" source = [[%.*s]] ", (int)e.source.len, e.source.ptr);
-    printf("}\n");
+    printf("\"%.*s\", ", (int)e.link.len, e.link.ptr);
+    printf("TEXT(%.*s)", (int)e.source.len, e.source.ptr);
+    printf(")\n");
 }
 
 int main(void)

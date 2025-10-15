@@ -1,0 +1,50 @@
+#define TEXT(...) __VA_ARGS__
+#define QUOTE(...) #__VA_ARGS__
+
+#define ENTRY(__title, __date, __link, __source)  \
+  <li>                                            \
+    <h3><a href=__link>__title</a></h3>           \
+    <time datetime=QUOTE(__date)>__date</time>    \
+    <address rel="author">__source</address>      \
+  </li>
+
+<!doctype html>
+<html>
+<head>
+  <title>Blogroll</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+<style rel="text/css">
+  :root {
+    color-scheme: light dark;
+  }
+  main {
+    margin-inline: auto;
+    max-width: min(70ch, 100% - 4rem);
+  }
+  body {
+    font-family: "Segoe UI", system-ui;
+    font-size: 1.25rem;
+    line-height: 1.5;
+  }
+  ul {
+    padding: 0;
+  }
+  li {
+    list-style: none;
+  }
+  li > h3 {
+    margin-bottom: 0;
+  }
+  a {
+    text-decoration: none;
+  }
+</style>
+</head>
+<body>
+  <main>
+    <ul>
+      #include "out.i"
+    </ul>
+  </main>
+</body>
+</html>
