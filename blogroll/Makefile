@@ -1,5 +1,9 @@
 SHELL := bash -o pipefail
+
 CC := tcc
+DEFINES := -D COMPILER="$(shell $(CC) -v 2>&1 | tail -n1)" 	\
+					 -D GENERATED_DATE="$(shell date +"%h %d, %Y")" 	\
+					 -D GENERATED_TIME="$(shell date +"%T")"
 
 define newline
 
@@ -7,7 +11,7 @@ define newline
 endef
 
 blogroll.html: template.html out.i
-	$(CC) -E -P -xc $< > $@
+	$(CC) $(DEFINES) -E -P -xc $< > $@
 
 out.i: generate
 	$(foreach feed,$(shell xargs -a list.txt), \

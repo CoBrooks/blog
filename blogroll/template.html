@@ -8,6 +8,15 @@
     <address rel="author">__source</address>      \
   </li>
 
+#define FOOTER(__compiler, __date, __time)      \
+  <footer>                                      \
+    Generated on                                \
+    <time datetime=QUOTE(__date)>__date</time>  \
+    at                                          \
+    <time datetime=QUOTE(__time)>__time</time>  \
+    with __compiler                             \
+  </footer>
+
 <!doctype html>
 <html>
 <head>
@@ -38,6 +47,10 @@
   a {
     text-decoration: none;
   }
+  footer {
+    font-size: 1.0rem;
+    font-family: monospace;
+  }
 </style>
 </head>
 <body>
@@ -46,5 +59,6 @@
       #include "out.i"
     </ul>
   </main>
+  FOOTER(COMPILER, GENERATED_DATE, GENERATED_TIME)
 </body>
 </html>
