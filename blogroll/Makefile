@@ -10,10 +10,13 @@ define newline
 
 endef
 
-blogroll.html: template.html out.i
+blogroll.html: template.html entries
 	$(CC) $(DEFINES) -E -P -xc $< > $@
 
-out.i: generate
+.PHONY: entries
+
+entries: generate list.txt
+	@echo -n "" > $@
 	$(foreach feed,$(shell xargs -a list.txt), \
 		curl -s $(feed) | ./generate | sort -r | head -n3 >> $@ $(newline) \
 	)
@@ -24,5 +27,5 @@ generate: generate.c
 
 .PHONY: clean
 
-clean: generate out.i blogroll.html
+clean: generate entries blogroll.html
 	rm $^
