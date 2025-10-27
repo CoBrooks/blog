@@ -262,9 +262,19 @@ void print_entry(entry e)
 {
     struct tm date = {0};
 
-    if (strptime(e.date.ptr, "%a, %d %h %Y %T", &date) == NULL) {
-        assert(strptime(e.date.ptr, "%FT%T", &date) && "unrecognized date format");
-    }
+    do {
+        if (strptime(e.date.ptr, "%a, %d %b %Y %T", &date) != NULL)
+            break;
+        if (strptime(e.date.ptr, "%FT%T", &date) != NULL)
+            break;
+        // Fix for https://verdagon.dev/blog/when-to-use-memory-safe-part-1:
+        //   <pubDate>Fri, Oct 7 2022 10:15:00 -0400</pubDate>
+        // :(
+        if (strptime(e.date.ptr, "%a, %b %d %Y %T", &date) != NULL)
+            break;
+
+        assert(0 && "unrecognized date format");
+    } while(0);
 
     const char date_buffer[64] = {0};
     size_t date_len;
@@ -295,7 +305,8 @@ int main(void)
 
         size_t n = fread((void*)buffer, sizeof(char), 1024, stdin);
 
-        contents = realloc((void*)contents, length + n);
+        // guarantee `contents` buffer ends with NULL byte
+        contents = realloc((void*)contents, length + n + 1);
 
         memcpy((void*)&contents[length], buffer, n);
 
