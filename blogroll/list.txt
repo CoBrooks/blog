@@ -7,5 +7,5 @@ https://mmapped.blog/feed.xml
 https://notes.eatonphil.com/rss.xml
 https://vkoskiv.com/atom.xml
 https://joshuao.com/index.xml
-https://mcyoung.xyz/feed
 https://verdagon.dev/rss.xml
+https://typesanitizer.com/blog/rss.xml
