@@ -10,3 +10,4 @@ https://joshuao.com/index.xml
 https://verdagon.dev/rss.xml
 https://typesanitizer.com/blog/rss.xml
 https://zackoverflow.dev/rss.xml
+https://lalinsky.com/feed.xml
