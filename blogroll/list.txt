@@ -12,3 +12,4 @@ https://typesanitizer.com/blog/rss.xml
 https://zackoverflow.dev/rss.xml
 https://lalinsky.com/feed.xml
 https://ploum.net/atom_en.xml
+https://wingolog.org/feed/atom
