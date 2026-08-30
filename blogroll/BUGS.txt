@@ -1,0 +1,1 @@
+- ratfactor.com: RSS entries are sorted by date ASC, so `top-x` filters don't work as expected

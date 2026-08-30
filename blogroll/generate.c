@@ -1,4 +1,5 @@
 #define _XOPEN_SOURCE
+#define _DEFAULT_SOURCE
 
 #include <assert.h>
 #include <stdio.h>
@@ -10,6 +11,12 @@
 
 #define XML_IMPLEMENTATION
 #include "xml.h"
+
+// difftime helpers
+const time_t DAY_S = (60 * 60 * 24);
+const time_t WEEK_S = (60 * 60 * 24 * 7);
+const time_t MONTH_S = (60 * 60 * 24 * 30);
+const time_t YEAR_S = (60 * 60 * 24 * 365);
 
 xml_event parse_until_tag(xml_state *state, const char *contents, const char *tag)
 {
@@ -259,7 +266,7 @@ void print_sanitized(xml_slice slice)
     printf("%.*s", (int)last.len, last.ptr);
 }
 
-void print_entry(entry e)
+void print_entry(entry e, int idx)
 {
     struct tm date = {0};
 
@@ -292,7 +299,25 @@ void print_entry(entry e)
     printf("TEXT(%.*s), ", (int)date_len, date_buffer);
 
     printf("\"%.*s\", ", (int)e.link.len, e.link.ptr);
-    printf("TEXT(%.*s)", (int)e.source.len, e.source.ptr);
+    printf("TEXT(%.*s), ", (int)e.source.len, e.source.ptr);
+
+    // tags
+    time_t now_s = time(NULL);
+    time_t date_s = timegm(&date);
+    time_t diff_s = now_s - date_s;
+
+    printf("TEXT(");
+    if (diff_s < DAY_S)   printf("today ");
+    if (diff_s < WEEK_S)  printf("this-week ");
+    if (diff_s < MONTH_S) printf("this-month ");
+    if (diff_s < YEAR_S)  printf("this-year ");
+
+    if (idx < 1)  printf("top-one ");
+    if (idx < 5)  printf("top-five ");
+    if (idx < 10) printf("top-ten ");
+
+    printf("%.*s)", (int)e.source.len, e.source.ptr);
+
     printf(")\n");
 }
 
@@ -331,14 +356,14 @@ int main(void)
 
     xml_slice source = get_source(&state, contents);
 
-    for (;;) {
+    for (int idx = 0;; ++idx) {
         entry e = { .source = source };
 
         if (get_entry(&state, contents, &e) == NULL) {
             break;
         }
 
-        print_entry(e);
+        print_entry(e, idx);
     }
 
     free((void*)contents);

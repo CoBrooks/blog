@@ -1,11 +1,12 @@
+#define HASH #
 #define TEXT(...) __VA_ARGS__
 #define QUOTE(...) #__VA_ARGS__
 
-#define ENTRY(__title, __date, __link, __source)  \
-  <li>                                            \
-    <h3><a href=__link>__title</a></h3>           \
-    <time datetime=QUOTE(__date)>__date</time>    \
-    <address rel="author">__source</address>      \
+#define ENTRY(__title, __date, __link, __source, __tags)  \
+  <li class=QUOTE(__tags)>                                \
+    <h3><a href=__link>__title</a></h3>                   \
+    <time datetime=QUOTE(__date)>__date</time>            \
+    <address rel="author">__source</address>              \
   </li>
 
 #define FOOTER(__compiler, __date, __time)      \
@@ -51,10 +52,101 @@
     font-size: 1.0rem;
     font-family: monospace;
   }
+  fieldset {
+    display: grid;
+  }
+  main:has(input:checked) li {
+    display: none;
+  }
+  main:has(#all:checked) li {
+    display: block;
+  }
+  main:has(#today:checked) li[class~="today"] {
+    display: block;
+  }
+  main:has(#this-week:checked) li[class~="this-week"] {
+    display: block;
+  }
+  main:has(#this-month:checked) li[class~="this-month"] {
+    display: block;
+  }
+  main:has(#this-year:checked) li[class~="this-year"] {
+    display: block;
+  }
+  main:has(#top-one:checked) li[class~="top-one"] {
+    display: block;
+  }
+  main:has(#top-five:checked) li[class~="top-five"] {
+    display: block;
+  }
+  main:has(#top-ten:checked) li[class~="top-ten"] {
+    display: block;
+  }
+#define SOURCE(__url)                                                 \
+  main:has(input[id~=QUOTE(__url)]:checked) li[class~=QUOTE(__url)] { \
+    display: block;                                                   \
+  }
+#include "sources"
+#undef SOURCE
 </style>
 </head>
 <body>
   <main>
+    <details>
+      <summary>Filters</summary>
+
+      <fieldset>
+        <legend>Date</legend>
+        <label for="today">
+          <input type="radio" id="today" name="filter">
+          today
+        </label>
+        <label for="this-week">
+          <input type="radio" id="this-week" name="filter">
+          this week
+        </label>
+        <label for="this-month">
+          <input type="radio" id="this-month" name="filter">
+          this month
+        </label>
+        <label for="this-year">
+          <input type="radio" id="this-year" name="filter">
+          this year
+        </label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Rank</legend>
+        <label for="top-one">
+          <input type="radio" id="top-one" name="filter">
+          top 1
+        </label>
+        <label for="top-five">
+          <input type="radio" id="top-five" name="filter" checked>
+          top 5 (default)
+        </label>
+        <label for="top-ten">
+          <input type="radio" id="top-ten" name="filter">
+          top 10
+        </label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Source</legend>
+#define SOURCE(__url)                                  \
+  <label for=QUOTE(__url)>                             \
+    <input type="radio" id=QUOTE(__url) name="filter"> \
+    __url                                              \
+  </label>
+#include "sources"
+#undef SOURCE
+      </fieldset>
+
+      <label for="all">
+        <input type="radio" id="all" name="filter">
+        all
+      </label>
+    </details>
     <ul>
       #include "entries"
     </ul>
