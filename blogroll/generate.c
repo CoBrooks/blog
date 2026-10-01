@@ -266,23 +266,38 @@ void print_sanitized(xml_slice slice)
     printf("%.*s", (int)last.len, last.ptr);
 }
 
+struct tm *parse_date(xml_slice str, struct tm *date)
+{
+    // Formats with similar prefixes should be ordered by descending length
+    char *formats[] = {
+        "%a, %d %b %Y %T",
+        "%FT%T%z",
+        "%FT%T",
+
+        // Fix for https://verdagon.dev/blog/when-to-use-memory-safe-part-1
+        //   <pubDate>Fri, Oct 7 2022 10:15:00 -0400</pubDate>
+        "%a, %b %d %Y %T",
+
+        // Fix for https://glfmn.io/posts/tidal-innards/
+        //   <updated>2026-09-16</updated>
+        "%F",
+    };
+
+    for (int i = 0; i < sizeof(formats) / sizeof(*formats); ++i) {
+        if (strptime(str.ptr, formats[i], date) != NULL) return date;
+    }
+
+    return NULL;
+}
+
 void print_entry(entry e, int idx)
 {
     struct tm date = {0};
 
-    do {
-        if (strptime(e.date.ptr, "%a, %d %b %Y %T", &date) != NULL)
-            break;
-        if (strptime(e.date.ptr, "%FT%T", &date) != NULL)
-            break;
-        // Fix for https://verdagon.dev/blog/when-to-use-memory-safe-part-1:
-        //   <pubDate>Fri, Oct 7 2022 10:15:00 -0400</pubDate>
-        // :(
-        if (strptime(e.date.ptr, "%a, %b %d %Y %T", &date) != NULL)
-            break;
-
+    if (parse_date(e.date, &date) == NULL) {
+        fprintf(stderr, "failed to parse date: %.*s\n", (int)e.date.len, e.date.ptr);
         assert(0 && "unrecognized date format");
-    } while(0);
+    }
 
     const char date_buffer[64] = {0};
     size_t date_len;
