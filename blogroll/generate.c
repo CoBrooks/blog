@@ -236,6 +236,8 @@ void print_sanitized(xml_slice slice)
         ['<'] = "&lt;",
         ['>'] = "&gt;",
         ['`'] = "&grave;",
+        ['('] = "&#40;",
+        [')'] = "&#41;",
     };
 
     const char *start = slice.ptr;
