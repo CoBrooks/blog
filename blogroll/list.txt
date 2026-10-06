@@ -14,6 +14,6 @@ https://lalinsky.com/feed.xml
 https://ploum.net/atom_en.xml
 https://wingolog.org/feed/atom
 https://iev.ee/rss.xml
-https://fzakaria.com/feed.xml
 https://entropicthoughts.com/feed.xml
 https://www.gingerbill.org/article/index.xml
+https://dbushell.com/rss.xml
