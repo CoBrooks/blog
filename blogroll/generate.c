@@ -183,6 +183,29 @@ entry *rss_to_entry(xml_state *state, const char *contents, entry *e)
     return e;
 }
 
+xml_slice hostname_from_url(xml_slice url)
+{
+    size_t start = 0;
+    size_t len = 0;
+
+    if (memcmp(url.ptr, "https://", 8) == 0) {
+        start = 8;
+    } else if (memcmp(url.ptr, "http://", 7) == 0) {
+        start = 7;
+    } else {
+        return (xml_slice){0};
+    }
+
+    while (url.ptr[start + len] != 0 && url.ptr[start + len] != '/') {
+        len++;
+    }
+
+    return (xml_slice){
+        .ptr = url.ptr + start,
+        .len = len,
+    };
+}
+
 xml_slice feed_source(xml_state *state, const char *contents)
 {
     xml_state start_state = *state;
@@ -190,19 +213,12 @@ xml_slice feed_source(xml_state *state, const char *contents)
     parse_until_tag(state, contents, "id");
     xml_slice id = get_text(state, contents);
 
-    size_t start, end;
-    char source_buf[64] = {0};
-
-    if (sscanf(id.ptr, "http%*2[s:]//%ln%*[a-zA-Z0-9.]%ln", &start, &end) < 0) {
-      assert(0 && "unable to parse feed source from id tag");
-    }
-
     *state = start_state;
 
-    return (xml_slice){
-        .ptr = id.ptr + start,
-        .len = end - start,
-    };
+    xml_slice source = hostname_from_url(id);
+    assert(source.ptr != NULL && "unable to parse feed source from id tag");
+
+    return source;
 }
 
 xml_slice rss_source(xml_state *state, const char *contents)
@@ -212,19 +228,12 @@ xml_slice rss_source(xml_state *state, const char *contents)
     parse_until_tag(state, contents, "link");
     xml_slice link = get_text(state, contents);
 
-    size_t start, end;
-    char source_buf[64] = {0};
-
-    if (sscanf(link.ptr, "http%*2[s:]//%ln%*[a-zA-Z0-9.]%ln", &start, &end) < 0) {
-      assert(0 && "unable to parse feed source from link tag");
-    }
-
     *state = start_state;
 
-    return (xml_slice){
-        .ptr = link.ptr + start,
-        .len = end - start,
-    };
+    xml_slice source = hostname_from_url(link);
+    assert(source.ptr != NULL && "unable to parse feed source from link tag");
+
+    return source;
 }
 
 void print_sanitized(xml_slice slice)
@@ -302,7 +311,7 @@ void print_entry(entry e, int idx)
     }
 
     const char date_buffer[64] = {0};
-    size_t date_len;
+    size_t date_len = 0;
 
     date_len = strftime((char*)date_buffer, sizeof(date_buffer), "%F", &date);
     printf("/* %.*s */ ", (int)date_len, date_buffer);
@@ -358,8 +367,8 @@ int main(void)
 
     xml_state state = {0};
 
-    xml_slice (*get_source)(xml_state*, const char*);
-    entry* (*get_entry)(xml_state*, const char*, entry*);
+    xml_slice (*get_source)(xml_state*, const char*) = NULL;
+    entry* (*get_entry)(xml_state*, const char*, entry*) = NULL;
 
     if (has_tag(&state, contents, "feed")) {
         get_source = feed_source;
