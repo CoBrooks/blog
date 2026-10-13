@@ -93,6 +93,8 @@ xml_slice get_text(xml_state *state, const char *contents)
 
 xml_slice trim_quotes(xml_slice str)
 {
+    if (str.len <= 2) return str;
+
     if (str.ptr[0] == '"') {
         str.ptr++;
         str.len--;
@@ -280,7 +282,7 @@ void print_sanitized(xml_slice slice)
 struct tm *parse_date(xml_slice str, struct tm *date)
 {
     // Formats with similar prefixes should be ordered by descending length
-    char *formats[] = {
+    const char *formats[] = {
         "%a, %d %b %Y %T",
         "%FT%T%z",
         "%FT%T",
@@ -294,8 +296,12 @@ struct tm *parse_date(xml_slice str, struct tm *date)
         "%F",
     };
 
+    char buffer[256] = {0};
+    assert(str.len < sizeof(buffer) / sizeof(*buffer));
+    memcpy(buffer, str.ptr, str.len);
+
     for (int i = 0; i < sizeof(formats) / sizeof(*formats); ++i) {
-        if (strptime(str.ptr, formats[i], date) != NULL) return date;
+        if (strptime(buffer, formats[i], date) != NULL) return date;
     }
 
     return NULL;
@@ -310,10 +316,10 @@ void print_entry(entry e, int idx)
         assert(0 && "unrecognized date format");
     }
 
-    const char date_buffer[64] = {0};
+    char date_buffer[64] = {0};
     size_t date_len = 0;
 
-    date_len = strftime((char*)date_buffer, sizeof(date_buffer), "%F", &date);
+    date_len = strftime((char*)date_buffer, sizeof(date_buffer) / sizeof(*date_buffer), "%F", &date);
     printf("/* %.*s */ ", (int)date_len, date_buffer);
 
     printf("ENTRY(");
@@ -321,7 +327,7 @@ void print_entry(entry e, int idx)
     print_sanitized(e.title);
     printf("), ");
 
-    date_len = strftime((char*)date_buffer, sizeof(date_buffer), "%h %d, %Y", &date);
+    date_len = strftime((char*)date_buffer, sizeof(date_buffer) / sizeof(*date_buffer), "%h %d, %Y", &date);
     printf("TEXT(%.*s), ", (int)date_len, date_buffer);
 
     printf("\"%.*s\", ", (int)e.link.len, e.link.ptr);

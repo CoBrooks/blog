@@ -1,6 +1,7 @@
 SHELL := bash -o pipefail
 
 CC := tcc
+CFLAGS := -O2 -gb -bt -std=c99 -Wall -Wunsupported -Werror
 DEFINES := -D COMPILER="$(shell $(CC) -v 2>&1 | tail -n1)" 	\
 					 -D GENERATED_DATE="$(shell date +"%h %d, %Y")" 	\
 					 -D GENERATED_TIME="$(shell date +"%T")"
@@ -26,7 +27,7 @@ sources: list.txt
 	cut -d'/' -f3 $< | xargs -I'*' echo "SOURCE(*)" > $@
 
 generate: generate.c
-	$(CC) -o $@ $<
+	$(CC) $(CFLAGS) -o $@ $<
 
 test: generate list.txt
 	@echo -n "" > entries
