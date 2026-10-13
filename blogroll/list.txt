@@ -17,3 +17,4 @@ https://iev.ee/rss.xml
 https://entropicthoughts.com/feed.xml
 https://www.gingerbill.org/article/index.xml
 https://dbushell.com/rss.xml
+https://386s.org/atom.xml
