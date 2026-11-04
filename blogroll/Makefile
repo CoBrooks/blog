@@ -1,7 +1,7 @@
 SHELL := bash -o pipefail
 
 CC := tcc
-CFLAGS := -O2 -gb -bt -std=c99 -Wall -Wunsupported -Werror
+CFLAGS := -O2 -gb -bt -std=c99 -Wall -Werror
 DEFINES := -D COMPILER="$(shell $(CC) -v 2>&1 | tail -n1)" 	\
 					 -D GENERATED_DATE="$(shell date +"%h %d, %Y")" 	\
 					 -D GENERATED_TIME="$(shell date +"%T")"
